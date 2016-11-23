@@ -805,7 +805,7 @@ Syn region svUnion NONE NONE
     \ end=';'me=s-1
     \ contains=svTypeParen
 
-Syn region svStruct NONE Structure
+Syn region svStruct NONE NONE
     \ matchgroup=svType
     \ start='\<struct\>'
     \ end=';'me=s-1
