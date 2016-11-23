@@ -858,7 +858,7 @@ Syn region svLoopGenerateConstructParen NONE NONE
     \ matchgroup=svParen
     \ start='('
     \ end=')'
-    \ contains=svAssign
+    \ contains=NONE
     \ contained
     \ containedin=NONE
     \ transparent
