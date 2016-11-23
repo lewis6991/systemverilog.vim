@@ -64,7 +64,7 @@ function! GetSystemVerilogIndent()
         \ l:sv_region != 'svParamAssign'       &&
         \ l:sv_region != 'svImplication'       &&
         \ l:sv_region != 'svComment'           &&
-        \ l:sv_region != 'svDefineDeclaration' &&
+        \ l:sv_region != 'svDefine'            &&
         \ l:sv_region != 'svImmediateProperty'
         call remove(l:context, 0)
         if len(l:context) > 0
@@ -129,7 +129,7 @@ function! GetSystemVerilogIndent()
         if l:line !~ '^\s*else\>'
             let l:offset += &sw
         endif
-    elseif l:sv_region == 'svDefineDeclaration'
+    elseif l:sv_region == 'svDefine'
         "Don't change indent as the body of a define has no syntax requirements.
         return indent(v:lnum)
     elseif l:sv_region == 'TOP'
