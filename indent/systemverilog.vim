@@ -9,34 +9,47 @@ setlocal indentkeys+==end
 setlocal indentkeys+==else
 
 let s:sv_regions = {
-    \ 'svModuleBody'      : { 'start' : '\<module\>'    , 'end' : '\<endmodule\>'             , 'seq' : 1 },
-    \ 'svInterfaceBody'   : { 'start' : '\<interface\>' , 'end' : '\<endinterface\>'          , 'seq' : 1 },
-    \ 'svProgramBody'     : { 'start' : '\<program\>'   , 'end' : '\<endprogram\>'            , 'seq' : 1 },
-    \ 'svClassBody'       : { 'start' : '\<class\>'     , 'end' : '\<endclass\>'              , 'seq' : 0 },
-    \ 'svFunctionBody'    : { 'start' : '\<function\>'  , 'end' : '\<endfunction\>'           , 'seq' : 1 },
-    \ 'svTaskBody'        : { 'start' : '\<task\>'      , 'end' : '\<endtask\>'               , 'seq' : 1 },
-    \ 'svPackageBody'     : { 'start' : '\<package\>'   , 'end' : '\<endpackage\>'            , 'seq' : 1 },
-    \ 'svStaticSeqBlock'  : { 'start' : '\<begin\>'     , 'end' : '\<end\>'                   , 'seq' : 1 },
-    \ 'svSeqBlock'        : { 'start' : '\<begin\>'     , 'end' : '\<end\>'                   , 'seq' : 1 },
-    \ 'svSequenceBody'    : { 'start' : '\<sequence\>'  , 'end' : '\<endsequence\>'           , 'seq' : 0 },
-    \ 'svGenerate'        : { 'start' : '\<generate\>'  , 'end' : '\<endgenerate\>'           , 'seq' : 1 },
-    \ 'svPropertyBody'    : { 'start' : '\<property\>'  , 'end' : '\<endproperty\>'           , 'seq' : 0 },
-    \ 'svCovergroupBody'  : { 'start' : '\<covergroup\>', 'end' : '\<endgroup\>'              , 'seq' : 0 },
-    \ 'svAttribute'       : { 'start' : '(\*'           , 'end' : '\*)'                       , 'seq' : 0 },
-    \ 'svDo'              : { 'start' : '\<do\>'        , 'end' : '\<while\s*(.*)\s*;'        , 'seq' : 1 },
-    \ 'svCase'            : { 'start' : '\<case\>'      , 'end' : '\<endcase\>'               , 'seq' : 1 },
-    \ 'svFork'            : { 'start' : '\<fork\>'      , 'end' : '\<join\%(_all\|_none\)\?\>', 'seq' : 1 },
-    \ 'svConstraintBody'  : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 1 },
-    \ 'svTypeParen'       : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 },
-    \ 'svConcat'          : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 },
-    \ 'svCoverpointBins'  : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 },
-    \ 'svRParen'          : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
-    \ 'svArgs'            : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
-    \ 'svPropertyParen'   : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
-    \ 'svParamDeclList'   : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
-    \ 'svPortList'        : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
-    \ 'svPortInstanceList': { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 }
+    \ 'svArgs'              : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
+    \ 'svAttribute'         : { 'start' : '(\*'           , 'end' : '\*)'                       , 'seq' : 0 },
+    \ 'svCase'              : { 'start' : '\<case\>'      , 'end' : '\<endcase\>'               , 'seq' : 1 },
+    \ 'svClass'             : { 'start' : '\<class\>'     , 'end' : '\<endclass\>'              , 'seq' : 0 },
+    \ 'svConcat'            : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 },
+    \ 'svConstraintBody'    : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 1 },
+    \ 'svCovergroupBody'    : { 'start' : '\<covergroup\>', 'end' : '\<endgroup\>'              , 'seq' : 0 },
+    \ 'svCoverpointBins'    : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 },
+    \ 'svDimension'         : { 'start' : '\['            , 'end' : '\]'                        , 'seq' : 0 },
+    \ 'svDo'                : { 'start' : '\<do\>'        , 'end' : '\<while\s*(.*)\s*;'        , 'seq' : 1 },
+    \ 'svEnumParen'         : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 },
+    \ 'svFork'              : { 'start' : '\<fork\>'      , 'end' : '\<join\%(_all\|_none\)\?\>', 'seq' : 1 },
+    \ 'svFunctionBody'      : { 'start' : '\<function\>'  , 'end' : '\<endfunction\>'           , 'seq' : 1 },
+    \ 'svGenerate'          : { 'start' : '\<generate\>'  , 'end' : '\<endgenerate\>'           , 'seq' : 1 },
+    \ 'svInterfaceBody'     : { 'start' : '\<interface\>' , 'end' : '\<endinterface\>'          , 'seq' : 1 },
+    \ 'svModuleBody'        : { 'start' : '\<module\>'    , 'end' : '\<endmodule\>'             , 'seq' : 1 },
+    \ 'svPackage'           : { 'start' : '\<package\>'   , 'end' : '\<endpackage\>'            , 'seq' : 1 },
+    \ 'svParamDeclList'     : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
+    \ 'svParamInstanceList' : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
+    \ 'svPortInstanceList'  : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
+    \ 'svPortList'          : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
+    \ 'svProgram'           : { 'start' : '\<program\>'   , 'end' : '\<endprogram\>'            , 'seq' : 1 },
+    \ 'svProperty'          : { 'start' : '\<property\>'  , 'end' : '\<endproperty\>'           , 'seq' : 0 },
+    \ 'svPropertyParen'     : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
+    \ 'svRParen'            : { 'start' : '('             , 'end' : ')'                         , 'seq' : 0 },
+    \ 'svSeqBlock'          : { 'start' : '\<begin\>'     , 'end' : '\<end\>'                   , 'seq' : 1 },
+    \ 'svSequence'          : { 'start' : '\<sequence\>'  , 'end' : '\<endsequence\>'           , 'seq' : 0 },
+    \ 'svStaticCase'        : { 'start' : '\<case\>'      , 'end' : '\<endcase\>'               , 'seq' : 1 },
+    \ 'svStaticSeqBlock'    : { 'start' : '\<begin\>'     , 'end' : '\<end\>'                   , 'seq' : 1 },
+    \ 'svTaskBody'          : { 'start' : '\<task\>'      , 'end' : '\<endtask\>'               , 'seq' : 1 },
+    \ 'svTypeParen'         : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 }
     \ }
+
+let s:sv_regions_list = [
+    \ 'svModule',
+    \ 'svInterface',
+    \ 'svFunction',
+    \ 'svTask',
+    \ 'svClass',
+    \ 'svFork',
+    \ ]
 
 function! GetSystemVerilogIndent()
     let l:line = getline(v:lnum)
@@ -56,9 +69,6 @@ function! GetSystemVerilogIndent()
     " Prune context for regions that don't determine indentation.
     while l:sv_region != 'TOP'                 &&
         \ !has_key(s:sv_regions, l:sv_region)  &&
-        \ l:sv_region != 'svTaskHeader'        &&
-        \ l:sv_region != 'svFunctionHeader'    &&
-        \ l:sv_region != 'svClassHeader'       &&
         \ l:sv_region != 'svAssign'            &&
         \ l:sv_region != 'svReturn'            &&
         \ l:sv_region != 'svParamAssign'       &&
@@ -67,32 +77,32 @@ function! GetSystemVerilogIndent()
         \ l:sv_region != 'svDefine'            &&
         \ l:sv_region != 'svImmediateProperty'
         call remove(l:context, 0)
-        if len(l:context) > 0
-            let l:sv_region = l:context[0]
-        else
-            let l:sv_region = 'TOP'
-            break
+        " If there is an svRegion then we must remove the next context entry
+        " if the svRegion belongs to a region start.
+        if l:sv_region == 'svRegion'
+            for l:region in s:sv_regions_list
+                if l:region == l:context[0]
+                    call remove(l:context, 0)
+                    break
+                endif
+            endfor
         endif
+        let l:sv_region = l:context[0]
     endwhile
 
     let l:context_line = 0
     let l:offset = 0
 
     if l:sv_region == 'svComment'
-        let l:context_line = v:lnum-1
+        let l:context_line = v:lnum
     elseif has_key(s:sv_regions, l:sv_region)
         let l:sv_region_details = s:sv_regions[l:sv_region]
-        let l:context_line = s:SearchBlockStart(l:sv_region_details['start'], l:sv_region_details['end'])
-        if l:line !~ '^\s*'.l:sv_region_details['end']
-            if l:sv_region == 'svFork'
-                if l:line =~ '^fork\>'
-                    return 0
-                endif
-            endif
+        let l:context_line = s:SearchBlockStart(l:sv_region_details.start, l:sv_region_details.end)
+        if l:line !~ '^\s*' . l:sv_region_details.end
             " If the region can contain one-line if statements and such, then we
             " must determine this indent by searching backwards for an anchor
             " point rather than just using the region start.
-            if l:sv_region_details['seq']
+            if l:sv_region_details.seq
                 let [l:context_line, l:offset] = s:GetSeqBlockIndentAnchor(l:context_line, v:lnum)
             else
                 let l:offset += &sw
@@ -104,15 +114,6 @@ function! GetSystemVerilogIndent()
                 endif
             endif
         endif
-    elseif l:sv_region =~ 'sv.*Header'
-        if l:sv_region =~ 'svClassHeader'
-            let l:context_line = s:SearchBlockStart('\<class\>', '\<endclass\>')
-        elseif l:sv_region =~ 'svFunctionHeader'
-            let l:context_line = s:SearchBlockStart('\<function\>', '\<endfunction\>')
-        elseif l:sv_region =~ 'svTaskHeader'
-            let l:context_line = s:SearchBlockStart('\<task\>', '\<endtask\>')
-        endif
-        let l:offset += &sw
     elseif l:sv_region == 'svAssign'      ||
         \  l:sv_region == 'svParamAssign'
         return s:GetAssignIndent()
@@ -248,7 +249,7 @@ endfunction
 function! s:SynStack(col)
     let l:context = reverse(map(synstack(v:lnum, a:col), 'synIDattr(v:val, "name")'))
     if len(l:context) > 0
-        return l:context
+        return l:context + [ 'TOP' ]
     else
         return [ 'TOP' ]
     endif
