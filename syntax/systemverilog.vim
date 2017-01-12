@@ -293,7 +293,6 @@ set synmaxcol=1000
         \ contains=NONE
         \ contained
         \ containedin=svParam
-
 "}}}
 
 "Regions {{{
@@ -378,6 +377,7 @@ set synmaxcol=1000
         \  'keepend'         : 1,
         \  'header_contains' : [
         \      'svLifetime',
+        \      'svDimension',
         \      'svMethodName'
         \    ],
         \  'body_contains'   : [
@@ -520,13 +520,12 @@ set synmaxcol=1000
             let s:region_cmd      .= ' keepend'
             let s:region_body_cmd .= ' keepend'
         endif
-        let s:region_cmd .= ' fold'
+        " let s:region_cmd .= ' fold'
 
         execute s:region_cmd
         execute s:region_header_cmd
         execute s:region_body_cmd
     endfor
-
 "}}}
 
 "Constants {{{
@@ -558,7 +557,6 @@ set synmaxcol=1000
         \svTimeLiteral,
         \svUnbasedUnsizedLiteral,
         \svStringLiteral
-
 "}}}
 
 "Delays {{{
@@ -574,7 +572,6 @@ set synmaxcol=1000
         \ end="\]"
         \ contains=@svConstantPrimary
         \ contained containedin=NONE
-
 "}}}
 
 "Let {{{
@@ -582,7 +579,8 @@ set synmaxcol=1000
         \ start="\<let\>"
         \ end=";"me=s-1
         \ contains=svLetWord
-        \ containedin=svStaticSeqBodys,svClassBody
+        \ nextgroup=svEndStatement
+        \ containedin=@svStaticSeqBodys,svClassBody
         \ transparent
 
     Syn keyword svLetWord NONE Statement
@@ -607,7 +605,6 @@ set synmaxcol=1000
         \ containedin=NONE
         \ nextgroup=svLetPortList,svAssign
         \ skipwhite skipempty
-
 "}}}
 
 "Parameters {{{
@@ -647,7 +644,6 @@ set synmaxcol=1000
         \ contains=@svCommon
         \ contained
         \ containedin=NONE
-
 "}}}
 
 "Parenthesis {{{
@@ -655,20 +651,19 @@ set synmaxcol=1000
         \ matchgroup=svParen
         \ start='('
         \ end=')'
-        \ contains=@svCommon,@svConstantPrimary,svOperator
+        \ contains=@svCommon,@svConstantPrimary,svOperator,svTernary
         \ extend
 
     Syn region svConcat NONE Normal
         \ matchgroup=svParen
         \ start='{'
         \ end='}'
-        \ contains=svConcat,@svConstantPrimary,svDimension
+        \ contains=svConcat,@svConstantPrimary,svDimension,@svCommon
 
     Syn match svConcatDelimiter NONE svOperator
         \ ","
         \ contains=NONE
         \ containedin=svConcat
-
 "}}}
 
 "Import {{{
@@ -685,7 +680,6 @@ set synmaxcol=1000
         \ import
         \ contained
         \ containedin=svImport
-
 "}}}
 
 "Function/Task Declarations {{{
@@ -725,7 +719,6 @@ set synmaxcol=1000
         \ contained
         \ containedin=svPureDecl,svExternDecl
         \ transparent
-
 "}}}
 
 "Generate {{{
@@ -737,7 +730,6 @@ set synmaxcol=1000
         \ containedin=svModuleBody,svInterfaceBody
         \ transparent
         \ keepend
-
 "}}}
 
 "Numbers {{{
@@ -762,7 +754,6 @@ set synmaxcol=1000
         \svStaticScope,
         \svStringLiteral,
         \svSystemTask
-
 "}}}
 
 "Assignments {{{
@@ -781,7 +772,7 @@ set synmaxcol=1000
         \ matchgroup=svOperator
         \ start='=\@<!<\?=\ze[^=]\?'
         \ end=';'me=s-1
-        \ contains=@svCommon,svOperator,svRParen,svConditionalAssign
+        \ contains=@svCommon,svOperator,svRParen,svConditionalAssign,svTernary
         \ containedin=svAssignStatement
         \ transparent
         \ keepend
@@ -792,6 +783,21 @@ set synmaxcol=1000
         \ containedin=svAssign
         \ display
 
+    Syn region svTernary NONE NONE
+        \ matchgroup=svOperator
+        \ start='?'
+        \ end=';\|)'he=s-1
+        \ contains=@svCommon,svTernary,svTernaryBranch,svOperator
+        \ transparent
+        \ keepend
+        \ nextgroup=svEndStatement
+        \ skipwhite skipempty
+
+    Syn match svTernaryBranch NONE svOperator
+        \ ':'
+        \ contains=NONE
+        \ containedin=svTernary
+        \ display
 "}}}
 
 "Do Statements {{{
@@ -801,7 +807,6 @@ set synmaxcol=1000
         \ end='\<while\>.*;'he=s+4
         \ contains=svRParen,svDefault,svSeqBlock,svAssign
         \ transparent
-
 "}}}
 
 "Case Statements {{{
@@ -836,7 +841,6 @@ set synmaxcol=1000
     Syn keyword svInside NONE Keyword
         \ inside
         \ contained
-
 "}}}
 
 "Sequential blocks (begin end) {{{
@@ -870,7 +874,6 @@ set synmaxcol=1000
         \ contains=NONE
         \ containedin=svSeqBlock,svStaticSeqBlock
         \ display
-
 "}}}
 
 "Fork Statements {{{
@@ -893,7 +896,6 @@ set synmaxcol=1000
         \ '\<wait\_s\+fork\_s*;'he=e-1
         \ contains=none
         \ containedin=@svSeqBodys
-
 "}}}
 
 "Coverpoints {{{
@@ -927,7 +929,6 @@ set synmaxcol=1000
         \ contains=NONE
         \ contained
         \ containedin=NONE
-
 "}}}
 
 "Typedef Statements {{{
@@ -979,7 +980,6 @@ set synmaxcol=1000
         \ end='}'
         \ contained containedin=svEnum
         \ transparent
-
 "}}}
 
 "Conditionals {{{
@@ -1041,7 +1041,6 @@ set synmaxcol=1000
         \ contained
         \ containedin=NONE
         \ display
-
 "}}}
 
 "Always Statements {{{
@@ -1076,7 +1075,6 @@ set synmaxcol=1000
         \ "\s*\zs:.*"
         \ contains=NONE
         \ contained containedin=NONE
-
 "}}}
 
 "Constraints {{{
@@ -1093,7 +1091,6 @@ set synmaxcol=1000
         \ end="}"he=s-1
         \ contains=svConstraintBody
         \ transparent
-
 "}}}
 
 "Assertions {{{
@@ -1109,7 +1106,7 @@ set synmaxcol=1000
     Syn region svConcurrentProperty NONE NONE
         \ start="\<\%(assert\|assume\|cover\)\s\+property\_s*("
         \ end=";"
-        \ contains=svAssertionKeyword,svPropertyParen
+        \ contains=svAssertionKeyword,svPropertyParen,svSystemTask
         \ transparent
         \ keepend
 
@@ -1139,7 +1136,6 @@ set synmaxcol=1000
         \ end=";"
         \ contains=svAssertionKeyword,svRParen
         \ transparent
-
 "}}}
 
 "Disable iff {{{
@@ -1155,7 +1151,6 @@ set synmaxcol=1000
         \ "\<disable\_s\+iff\>"
         \ nextgroup=svRParen
         \ skipwhite skipempty
-
 "}}}
 
 "System Tasks {{{
@@ -1173,7 +1168,6 @@ set synmaxcol=1000
         \ containedin=NONE
         \ transparent
         \ extend
-
 "}}}
 
 "Preprocessor {{{
@@ -1218,7 +1212,6 @@ set synmaxcol=1000
         \ nextgroup=svStringLiteral
         \ skipwhite
         \ display
-
 "}}}
 
 "Defines {{{
@@ -1276,7 +1269,6 @@ set synmaxcol=1000
         \ contains=NONE
         \ contained containedin=NONE
         \ display
-
 "}}}
 
 "String {{{
@@ -1342,4 +1334,4 @@ set synmaxcol=1000
     syntax sync match svSync grouphere svClass     "extern\@<!\<class\>"
 "}}}
 
-" vim : set foldmethod=marker :
+" vim: foldmethod=marker:

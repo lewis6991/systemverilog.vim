@@ -70,6 +70,7 @@ function! GetSystemVerilogIndent()
     while l:sv_region != 'TOP'                 &&
         \ !has_key(s:sv_regions, l:sv_region)  &&
         \ l:sv_region != 'svAssign'            &&
+        \ l:sv_region != 'svTernary'           &&
         \ l:sv_region != 'svReturn'            &&
         \ l:sv_region != 'svParamAssign'       &&
         \ l:sv_region != 'svImplication'       &&
@@ -117,6 +118,8 @@ function! GetSystemVerilogIndent()
     elseif l:sv_region == 'svAssign'      ||
         \  l:sv_region == 'svParamAssign'
         return s:GetAssignIndent()
+    elseif l:sv_region == 'svTernary'
+        return s:GetTernaryIndent()
     elseif l:sv_region == 'svImplication'
         if l:line =~ '\s*);'
             let l:context_line = s:SearchBlockStart('(', ')')
@@ -202,15 +205,25 @@ function! s:GetElseIndent()
     endif
 endfunction
 
-function! s:GetAssignIndent()
-    echom "s:GetAssignIndent: Start --->"
+function! s:GetTernaryIndent()
+    echom "s:GetTernaryIndent: Start --->"
     let l:lnum = prevnonblank(v:lnum - 1)
     let l:line = getline(l:lnum)
 
     if l:line =~ '?\s*[^ ]' && getline(v:lnum) !~ '?'
         echom "Ternary"
         return len(substitute(l:line, '?\s*\zs.*', '', ""))
-    elseif l:line =~ '[^!>|=]=[^=]\s*[^ ]'
+    else
+        return s:GetAssignIndent()
+    endif
+endfunction
+
+function! s:GetAssignIndent()
+    echom "s:GetAssignIndent: Start --->"
+    let l:lnum = prevnonblank(v:lnum - 1)
+    let l:line = getline(l:lnum)
+
+    if l:line =~ '[^!>|=]=[^=]\s*[^ ]'
         echom "Assign 1"
         return len(substitute(l:line, '<\?=\s*\zs.*', '', ""))
     elseif l:line =~ '|[-=]>\s*[^ ]'

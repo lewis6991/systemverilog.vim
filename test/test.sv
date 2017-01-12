@@ -166,9 +166,12 @@ begin
     end
 end
 
-// TODO
+wire e = a ? b :
+         c ? d :
+             e;
+
 wire e = (a == 2 ? b : 1'b1) &&
-                   c && d;
+         c && d;
 
 assert_delays: assert property (
   ##'1 a ##[1:0] b
@@ -179,4 +182,3 @@ assign item.array[19].field1.field1 = 1'b1;
 for (genvar i = 0; i < 8; i = i + 1) begin : g1
   assign item.array[i].field1.field1 = 1'b1;
 end
-
