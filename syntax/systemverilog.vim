@@ -293,6 +293,14 @@ set synmaxcol=1000
         \ contains=NONE
         \ contained
         \ containedin=svParam
+
+    Syn keyword svInitial NONE svStatement
+        \ initial
+        \ containedin=@svStaticSeqBodys
+
+    Syn keyword svFinal NONE svStatement
+        \ final
+        \ containedin=@svStaticSeqBodys
 "}}}
 
 "Regions {{{

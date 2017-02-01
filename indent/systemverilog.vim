@@ -173,6 +173,8 @@ function! s:GetSeqBlockIndentAnchor(old_context_line, lnum)
             \ l:line =~ '^\s*'. 'foreach'    .'\>' ||
             \ l:line =~ '^\s*'. 'for'        .'\>' ||
             \ l:line =~ '^\s*'. 'while'      .'\>' ||
+            \ l:line =~ '^\s*'. 'initial'    .'\>' ||
+            \ l:line =~ '^\s*'. 'final'      .'\>' ||
             \ l:line =~ '^\s*'. 'always'
             let l:context_line = l:lnum
             echom "s:GetSeqBlockIndentAnchor: Found Indent Anchor: " .  l:context_line . " : [" . l:line . "]"
