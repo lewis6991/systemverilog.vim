@@ -257,10 +257,10 @@ set synmaxcol=1000
         \ contains=NONE
         \ contained containedin=NONE
 
-    "Syn match svIdentifier NONE NONE
-    "    \ '\<\h\w*\>'
-    "    \ contains=NONE
-    "    \ contained containedin=NONE
+    Syn match svIdentifier NONE NONE
+        \ '\<\h\w*\>'
+        \ contains=NONE
+        \ contained containedin=NONE
 
     Syn region svLocalParam NONE NONE
         \ matchgroup=svStatement
@@ -477,6 +477,16 @@ set synmaxcol=1000
         \      'svModule'   ,
         \      'svTask'
         \    ]
+        \ },
+        \ {'name'            : 'svConfig',
+        \  'start'           : 'config'  ,
+        \  'end'             : 'endconfig',
+        \  'keepend'         : 1,
+        \  'body_contains'   : [
+        \      'svDesignStatement',
+        \      'svLocalParam',
+        \      '@svConfigRuleStatement'
+        \    ]
         \ }
         \ ]
 
@@ -526,6 +536,50 @@ set synmaxcol=1000
         execute s:region_header_cmd
         execute s:region_body_cmd
     endfor
+"}}}
+
+"Config {{{
+    Syn region svDesignStatement NONE NONE
+        \ matchgroup=svStatement
+        \ start="\<design\>"
+        \ end=";"me=s-1
+        \ contained containedin=svConfig
+
+    Syn keyword svDefaultLiblist svConfigRuleStatement Keyword
+        \ default
+        \ contained containedin=svConfig
+        \ nextgroup=svLiblistClause
+        \ skipwhite skipempty
+
+    Syn region svInstClause svConfigRuleStatement NONE
+        \ matchgroup=svStatement
+        \ start="\<instance\>"
+        \ end=";"me=s-1
+        \ contains=svLiblistClause,svUseClause
+        \ contained containedin=svConfig
+        \ nextgroup=svIdentifier
+        \ skipwhite skipempty
+
+    Syn region svCellClause svConfigRuleStatement NONE
+        \ matchgroup=svStatement
+        \ start="\<cell\>"
+        \ end=";"me=s-1
+        \ contains=svLiblistClause,svUseClause
+        \ contained containedin=svConfig
+        \ nextgroup=svIdentifier
+        \ skipwhite skipempty
+
+    Syn keyword svLiblistClause svConfigRuleStatement svStatement
+        \ liblist
+        \ contained containedin=svInstClause,svCellClause
+        \ nextgroup=svIdentifier
+        \ skipwhite skipempty
+
+    Syn keyword svUseClause svConfigRuleStatement svStatement
+        \ use
+        \ contained containedin=svInstClause,svCellClause
+        \ nextgroup=svIdentifier
+        \ skipwhite skipempty
 "}}}
 
 "Constants {{{
@@ -1326,12 +1380,22 @@ set synmaxcol=1000
 "}}}
 
 "Syncing {{{
-    "syntax sync fromstart "Most accurate but also slowest
-    syntax sync match svSync grouphere svModule    "extern\@<!\<module\>"
-    syntax sync match svSync grouphere svInterface "extern\@<!\<interface\>"
-    syntax sync match svSync grouphere svFunction  "extern\@<!\<function\>"
-    syntax sync match svSync grouphere svTask      "extern\@<!\<task\>"
-    syntax sync match svSync grouphere svClass     "extern\@<!\<class\>"
+    " Only match on start of regions with no indent.
+    syntax sync match svSync grouphere svModule    "^\<module\>"
+    syntax sync match svSync grouphere svInterface "^\<interface\>"
+    syntax sync match svSync grouphere svFunction  "^\<function\>"
+    syntax sync match svSync grouphere svTask      "^\<task\>"
+    syntax sync match svSync grouphere svClass     "^\<class\>"
+
+    " If the end of a region has no indent, then assume it is at the top level and
+    " hence is not contained in another syntax region. This massively speeds up
+    " syntax highlighting of very large files.
+    syntax sync match svSync grouphere NONE "^\<endfunction\>"
+    syntax sync match svSync grouphere NONE "^\<endmodule\>"
+    syntax sync match svSync grouphere NONE "^\<endinterface\>"
+    syntax sync match svSync grouphere NONE "^\<endtask\>"
+    syntax sync match svSync grouphere NONE "^\<endclass\>"
+    syntax sync maxlines=50000
 "}}}
 
 " vim: foldmethod=marker:

@@ -15,6 +15,7 @@ let s:sv_regions = {
     \ 'svClass'             : { 'start' : '\<class\>'     , 'end' : '\<endclass\>'              , 'seq' : 0 },
     \ 'svConcat'            : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 },
     \ 'svConstraintBody'    : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 1 },
+    \ 'svConfig'            : { 'start' : '^\s*config\>'  , 'end' : '\<endconfig\>'             , 'seq' : 0 },
     \ 'svCovergroupBody'    : { 'start' : '\<covergroup\>', 'end' : '\<endgroup\>'              , 'seq' : 0 },
     \ 'svCoverpointBins'    : { 'start' : '{'             , 'end' : '}'                         , 'seq' : 0 },
     \ 'svDimension'         : { 'start' : '\['            , 'end' : '\]'                        , 'seq' : 0 },
@@ -54,6 +55,10 @@ let s:sv_regions_list = [
 function! GetSystemVerilogIndent()
     let l:line = getline(v:lnum)
     echom " "
+
+    if v:lnum == 1
+        return 0
+    endif
 
     " Handle some edge-cases first.
     if l:line =~ '^\s*//.*' && getline(v:lnum+1) =~ 'else'
