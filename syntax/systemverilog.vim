@@ -599,6 +599,11 @@ set synmaxcol=1000
     let s:unsigned_number = s:decimal_digit . '\%(_\|'. s:decimal_digit . '\)*'
     let s:time_literal = s:unsigned_number.'\s*'.s:time_unit
 
+    SynMatch svUnsignedNumber NONE Constant
+        \ s:unsigned_number
+        \ contains=NONE
+        \ contained containedin=NONE
+
     SynMatch svTimeLiteral NONE Constant
         \ s:time_literal
         \ contains=NONE
@@ -619,6 +624,16 @@ set synmaxcol=1000
         \svTimeLiteral,
         \svUnbasedUnsizedLiteral,
         \svStringLiteral
+
+    Syn match svOneStep NONE Constant
+        \ "1step\>"
+        \ contains=NONE
+        \ contained containedin=NONE
+
+    syntax cluster svDelayValue contains=
+        \svUnsignedNumber,
+        \svTimeLiteral,
+        \svOneStep
 "}}}
 
 "Delays {{{
@@ -634,6 +649,12 @@ set synmaxcol=1000
         \ end="\]"
         \ contains=@svConstantPrimary
         \ contained containedin=NONE
+
+    Syn match svDelayControl NONE Constant
+        \ "#"
+        \ containedin=@svStaticSeqBodys
+        \ nextgroup=@svDelayValue
+        \ skipwhite skipempty
 "}}}
 
 "Let {{{
