@@ -8,8 +8,7 @@ endif
 
 let b:current_syntax = "systemverilog"
 
-set commentstring=//%s
-set synmaxcol=1000
+setlocal synmaxcol=1000
 
 "Syntax functions/commands {{{
     function! s:SynFunction(syn_type, group_name, list_to, link_to, ...)
